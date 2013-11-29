@@ -4,7 +4,7 @@
 
 Nonterminals
 Graph GraphTy StmtList Stmt NodeStmt EdgeStmt AttrStmt Equality Subgraph
-AttrList AList NodeId EdgeRHS EdgeCon EdgeOp
+AttrList AList NodeId EdgeRHS EdgeOp
 .
 
 Terminals
@@ -55,10 +55,10 @@ EdgeStmt -> NodeId   EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
 EdgeStmt -> Subgraph EdgeRHS             : {edge,loc('$2'),'$1','$2',[]}.
 EdgeStmt -> Subgraph EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
 
-EdgeRHS -> EdgeCon             : ['$1'].
-EdgeRHS -> EdgeCon  EdgeRHS    : ['$1'|'$2'].
-EdgeCon -> EdgeOp NodeId      : {element(1,'$1'),loc('$1'),'$2'}.
-EdgeCon -> EdgeOp Subgraph    : {element(1,'$1'),loc('$1'),'$2'}.
+EdgeRHS -> EdgeOp NodeId              : {element(1,'$1'),loc('$1'),'$2',[]}.
+EdgeRHS -> EdgeOp NodeId EdgeRHS      : {element(1,'$1'),loc('$1'),'$2','$3'}.
+EdgeRHS -> EdgeOp Subgraph            : {element(1,'$1'),loc('$1'),'$2',[]}.
+EdgeRHS -> EdgeOp Subgraph EdgeRHS    : {element(1,'$1'),loc('$1'),'$2','$3'}.
 EdgeOp -> '--'    : '$1'.
 EdgeOp -> '->'    : '$1'.
 
