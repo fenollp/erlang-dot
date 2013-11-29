@@ -1,5 +1,8 @@
 #erlang-dot • [GitHub](//github.com/fenollp/erlang-dot)
 
+### Basis
+[The DOT grammar](http://www.graphviz.org/doc/info/lang.html)
+
 ## Overview
 This library reads & writes DOT files, having an AST (defined in `include/dot.hrl`) usable in Erlang.
 
