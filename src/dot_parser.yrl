@@ -16,10 +16,10 @@ id
 
 Rootsymbol Graph.
 
-Graph ->          GraphTy    '{' StmtList '}'   : {'$1',loc('$1'),false,<<>>,'$3'}.
-Graph -> 'strict' GraphTy    '{' StmtList '}'   : {'$2',loc('$2'),true, <<>>,'$4'}.
-Graph ->          GraphTy id '{' StmtList '}'   : {'$1',loc('$1'),false,'$2','$4'}.
-Graph -> 'strict' GraphTy id '{' StmtList '}'   : {'$2',loc('$2'),true, '$3','$5'}.
+Graph ->          GraphTy    '{' StmtList '}'   : {'$1',loc('$1'),false,    <<>>,'$3'}.
+Graph -> 'strict' GraphTy    '{' StmtList '}'   : {'$2',loc('$2'),true,     <<>>,'$4'}.
+Graph ->          GraphTy id '{' StmtList '}'   : {'$1',loc('$1'),false,id('$2'),'$4'}.
+Graph -> 'strict' GraphTy id '{' StmtList '}'   : {'$2',loc('$2'),true, id('$3'),'$5'}.
 GraphTy -> 'graph'      : '$1'.
 GraphTy -> 'digraph'    : '$1'.
 
@@ -34,7 +34,7 @@ Stmt -> AttrStmt    : '$1'.
 Stmt -> Equality    : '$1'.
 Stmt -> Subgraph    : '$1'.
 
-Equality -> id '=' id    : {'=',loc('$2'),'$1','$3'}.
+Equality -> id '=' id    : {'=',loc('$2'),id('$1'),id('$3')}.
 
 AttrStmt -> 'graph' AttrList    : {'$1',loc('$1'),'$2'}.
 AttrStmt -> 'node'  AttrList    : {'$1',loc('$1'),'$2'}.
@@ -57,26 +57,29 @@ EdgeStmt -> Subgraph EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
 
 EdgeRHS -> EdgeCon             : ['$1'].
 EdgeRHS -> EdgeCon  EdgeRHS    : ['$1'|'$2'].
-EdgeCon -> EdgeOp NodeId      : {'$1',loc('$1'),'$2'}.
-EdgeCon -> EdgeOp Subgraph    : {'$1',loc('$1'),'$2'}.
+EdgeCon -> EdgeOp NodeId      : {element(1,'$1'),loc('$1'),'$2'}.
+EdgeCon -> EdgeOp Subgraph    : {element(1,'$1'),loc('$1'),'$2'}.
 EdgeOp -> '--'    : '$1'.
 EdgeOp -> '->'    : '$1'.
 
 NodeStmt -> NodeId             : {node,loc('$1'),'$1',[]}.
 NodeStmt -> NodeId AttrList    : {node,loc('$1'),'$1','$2'}.
 
-NodeId -> id                  : {nodeid,loc('$1'),'$1',<<>>,<<>>}.
-NodeId -> id ':' id           : {nodeid,loc('$1'),'$1','$3',<<>>}.
-NodeId -> id ':' id ':' id    : {nodeid,loc('$1'),'$1','$3','$5'}.
+NodeId -> id                  : {nodeid,loc('$1'),id('$1'),     <<>>,     <<>>}.
+NodeId -> id ':' id           : {nodeid,loc('$1'),id('$1'),id('$3'),     <<>>}.
+NodeId -> id ':' id ':' id    : {nodeid,loc('$1'),id('$1'),id('$3'),id('$5')}.
 
-Subgraph ->               '{' StmtList '}'    : {'subgraph',loc('$1'),<<>>,'$2'}.
-Subgraph ->            id '{' StmtList '}'    : {'subgraph',loc('$2'),'$1','$3'}.
-Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',loc('$3'),'$2','$4'}.
+Subgraph ->               '{' StmtList '}'    : {'subgraph',loc('$1'),     <<>>,'$2'}.
+Subgraph ->            id '{' StmtList '}'    : {'subgraph',loc('$2'),id('$1'),'$3'}.
+Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',loc('$3'),id('$2'),'$4'}.
 
 %% Number of shift/reduce conflicts
 Expect 2.
 
 Erlang code.
+
+id (Id) ->
+    element(3, Id).
 
 loc (T) when is_tuple(T) ->
     element(2, T);
