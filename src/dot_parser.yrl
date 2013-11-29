@@ -26,7 +26,7 @@ GraphTy -> 'digraph'    : '$1'.
 StmtList -> Stmt                 : ['$1'].
 StmtList -> Stmt     StmtList    : ['$1'|'$2'].
 StmtList -> Stmt ';'             : ['$1'].
-StmtList -> Stmt ';' StmtList    : ['$1'|'$2'].
+StmtList -> Stmt ';' StmtList    : ['$1'|'$3'].
 
 Stmt -> NodeStmt    : '$1'.
 Stmt -> EdgeStmt    : '$1'.
