@@ -1,0 +1,13 @@
+{application, doterl
+, [
+  , {description, "An Erlang doterl library"}
+  , {vsn, "1"}
+  , {modules, [
+              ]}
+  , {registered, []}
+  , {applications, [ kernel
+                   , stdlib
+                   ]}
+  , {env, []}
+  ]
+}.
