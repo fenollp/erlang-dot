@@ -1,8 +1,8 @@
 %% See LICENSE for licensing information.
 %% -*- coding: utf-8 -*-
--module(erlang-dot).
+-module(dot).
 
-%% erlang-dot: erlang-dot library's entry point.
+%% dot: erlang-dot library's entry point.
 
 -export([my_func/0]).
 

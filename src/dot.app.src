@@ -1,6 +1,6 @@
-{application, erlang-dot
+{application, dot
 , [
-  , {description, "An Erlang erlang-dot library"}
+  , {description, "An Erlang DOT (graph description language) library"}
   , {vsn, "1"}
   , {modules, [
               ]}
