@@ -33,8 +33,8 @@ Quoted  = ("(\\([^\\]|\\)|[^\\""])+")
 %HTML    = (TODO)
 
 % edgeops
+DiOp   = (->)
 UnDiOp = (--)
-DiOP   = (->)
 
 Rules.
 %% Note: rule order matters.
@@ -47,6 +47,9 @@ Rules.
 {E}{D}{G}{E}   : {token,{'edge',TokenLine}}.
 
 {S}{U}{B}{G}{R}{A}{P}{H}    : {token,{'subgraph',TokenLine}}.
+
+{DiOp}    : {token,{'->',TokenLine}}.
+{UnDiOp}  : {token,{'--',TokenLine}}.
 
 \;          : {token,{';',TokenLine}}.
 \,          : {token,{',',TokenLine}}.
@@ -62,9 +65,6 @@ Rules.
 {Numeral}       : {token,{id,TokenLine,list_to_binary(TokenChars)}}.
 {Quoted}        : {token,{id,TokenLine,unquote(list_to_binary(TokenChars))}}.
 %{HTML}          : {token,{id,TokenLine,list_to_binary(TokenChars)}}.
-
-{UnDiOp}  : {token,{'--',TokenLine}}.
-{DiOp}    : {token,{'->',TokenLine}}.
 
 % Declared after ids to enable embedded comments there.
 {DoubleSlashComment}    : skip_token.
