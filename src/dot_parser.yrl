@@ -23,7 +23,6 @@ Graph -> 'strict' GraphTy id '{' StmtList '}'   : {'$2',loc('$2'),true, '$3','$5
 GraphTy -> 'graph'      : '$1'.
 GraphTy -> 'digraph'    : '$1'.
 
-StmtList -> '$empty'             : [].
 StmtList -> Stmt                 : ['$1'].
 StmtList -> Stmt     StmtList    : ['$1'|'$2'].
 StmtList -> Stmt ';'             : ['$1'].
