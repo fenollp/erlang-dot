@@ -1,6 +1,6 @@
-{application, doterl
+{application, erlang-dot
 , [
-  , {description, "An Erlang doterl library"}
+  , {description, "An Erlang erlang-dot library"}
   , {vsn, "1"}
   , {modules, [
               ]}

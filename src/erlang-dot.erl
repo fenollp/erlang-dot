@@ -1,8 +1,8 @@
 %% See LICENSE for licensing information.
 %% -*- coding: utf-8 -*-
--module(doterl).
+-module(erlang-dot).
 
-%% doterl: doterl library's entry point.
+%% erlang-dot: erlang-dot library's entry point.
 
 -export([my_func/0]).
 
