@@ -4,7 +4,7 @@
 
 Nonterminals
 Graph GraphTy StmtList Stmt NodeStmt EdgeStmt AttrStmt Equality Subgraph
-AttrStmt AttrList AList NodeId EdgeRHS EdgeCon EdgeOp
+AttrList AList NodeId EdgeRHS EdgeCon EdgeOp
 .
 
 Terminals
@@ -74,7 +74,7 @@ Subgraph ->            id '{' StmtList '}'    : {'subgraph',loc('$2'),'$1','$3'}
 Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',loc('$3'),'$2','$4'}.
 
 %% Number of shift/reduce conflicts
-Expect 0.
+Expect 2.
 
 Erlang code.
 
