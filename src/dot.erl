@@ -9,6 +9,9 @@
 -export([from_file/1]).
 -export([  to_file/2]).
 
+-export([  load_graph/1]).
+-export([export_graph/1]).
+
 -include("include/dot.hrl").
 
 -type out(Ty) :: {ok, Ty} | {error, term()}.
@@ -46,6 +49,23 @@ from_file (Filename) -> %TODO: parse while reading file: best for huge files.
 to_file (Filename, AST) ->
     {ok, String} = ?MODULE:to_string(AST),
     file:write_file(Filename, String).
+
+
+-spec load_graph (dot()) -> out(term()).
+load_graph (AST) ->
+    case element(1,AST) of
+        digraph ->
+            dot_digraph:load(AST)
+    end.
+
+-spec export_graph (term()) -> out(dot()).
+export_graph (Graph) ->
+    case Graph of
+        Digraph when is_tuple  (Digraph),
+                     size      (Digraph) =:= 5,
+                     element(1, Digraph) == digraph ->
+            dot_digraph:export(Digraph)
+    end.
 
 %% Internals
 

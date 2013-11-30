@@ -2,7 +2,10 @@
 , [
   , {description, "An Erlang DOT (graph description language) library"}
   , {vsn, "1"}
-  , {modules, [
+  , {modules, [ dot
+              , dot_lexer
+              , dot_parser
+              , dot_digraph
               ]}
   , {registered, []}
   , {applications, [ kernel
