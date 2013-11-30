@@ -37,7 +37,7 @@ to_string (AST) ->
     {error, AST}.%TODO
 
 -spec from_file (file:name()) -> out(dot()).
-from_file (Filename) ->
+from_file (Filename) -> %TODO: parse while reading file: best for huge files.
     {ok, Dev} = file:open(Filename, [read,unicode]),
     String = assemble_lines(Dev, []),
     ?MODULE:from_string(String).
