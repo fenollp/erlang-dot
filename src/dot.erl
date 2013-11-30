@@ -34,7 +34,7 @@ from_string (String) ->
 
 -spec to_string (dot()) -> out(string()).
 to_string (AST) ->
-    {error, AST}.%TODO
+    {ok, tostring(AST)}.
 
 -spec from_file (file:name()) -> out(dot()).
 from_file (Filename) -> %TODO: parse while reading file: best for huge files.
@@ -62,5 +62,28 @@ scan (Str) ->
     dot_lexer:string(Str).
 parse (Tokens) ->
     dot_parser:parse(Tokens).
+
+tostring ({GraphTy,_,Direct,Name,Edges}) ->
+    [ case GraphTy of
+          'digraph' -> "digraph ";
+          'graph'   -> "graph "
+      end
+    , case Direct of true -> "direct "; false -> "" end
+    , Name, " {\n"
+    ,[case Op of
+          '--' -> [$\t, A, " -- ", B, assocs(Opts), ";\n"];
+          '->' -> [$\t, A, " -> ", B, assocs(Opts), ";\n"]
+      end || {Op,_,{nodeid,_,A,_,_},{nodeid,_,B,_,_},Opts} <- Edges]
+    , "}\n"
+    ];
+tostring ({'=',_,Lhs,Rhs}) ->
+    [Lhs, "=", Rhs];
+tostring (A) when is_list(A) ->
+    [tostring(X) || X <- A].
+
+assocs ([]) ->
+    [];
+assocs (Opts) ->
+    [" [", string:join([tostring(Opt) || Opt <- Opts], ", "), $]].
 
 %% End of Module.
