@@ -16,10 +16,10 @@ id
 
 Rootsymbol Graph.
 
-Graph ->          GraphTy    '{' StmtList '}'   : {'$1',loc('$1'),false,    <<>>,'$3'}.
-Graph -> 'strict' GraphTy    '{' StmtList '}'   : {'$2',loc('$2'),true,     <<>>,'$4'}.
-Graph ->          GraphTy id '{' StmtList '}'   : {'$1',loc('$1'),false,id('$2'),'$4'}.
-Graph -> 'strict' GraphTy id '{' StmtList '}'   : {'$2',loc('$2'),true, id('$3'),'$5'}.
+Graph ->          GraphTy    '{' StmtList '}'   : {element(1,'$1'),loc('$1'),false,    <<>>,lists:append('$3')}.
+Graph -> 'strict' GraphTy    '{' StmtList '}'   : {element(1,'$2'),loc('$2'),true,     <<>>,lists:append('$4')}.
+Graph ->          GraphTy id '{' StmtList '}'   : {element(1,'$1'),loc('$1'),false,id('$2'),lists:append('$4')}.
+Graph -> 'strict' GraphTy id '{' StmtList '}'   : {element(1,'$2'),loc('$2'),true, id('$3'),lists:append('$5')}.
 GraphTy -> 'graph'      : '$1'.
 GraphTy -> 'digraph'    : '$1'.
 
@@ -50,8 +50,8 @@ AList -> Equality     AList    : ['$1'|'$2'].
 AList -> Equality ','          : ['$1'].
 AList -> Equality ',' AList    : ['$1'|'$3'].
 
-EdgeStmt -> NodeId   EdgeRHS             : {edge,loc('$2'),'$1','$2',[]}.
-EdgeStmt -> NodeId   EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
+EdgeStmt -> NodeId   EdgeRHS             : rw_edge({edge,loc('$2'),'$1','$2',[]}).
+EdgeStmt -> NodeId   EdgeRHS AttrList    : rw_edge({edge,loc('$2'),'$1','$2','$3'}).
 EdgeStmt -> Subgraph EdgeRHS             : {edge,loc('$2'),'$1','$2',[]}.
 EdgeStmt -> Subgraph EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
 
@@ -85,5 +85,13 @@ loc (T) when is_tuple(T) ->
     element(2, T);
 loc (R) ->
     R.
+
+rw_edge (Edge) ->
+    case Edge of
+        {edge,Loc,NodeA,{EdgeOp,Loc2,NodeB,Rest},Opts} ->
+            [{EdgeOp,Loc,NodeA,NodeB,Opts} | rw_edge({edge,Loc2,NodeB,Rest,Opts})];
+        _ -> []
+    end.
+
 
 %% End of Parser.
