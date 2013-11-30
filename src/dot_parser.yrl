@@ -45,7 +45,7 @@ AttrList -> '[' AList ']'             : ['$2'].
 AttrList -> '['       ']' AttrList    : '$3'.
 AttrList -> '[' AList ']' AttrList    : ['$2'|'$4'].
 
-AList -> Equality              : [].
+AList -> Equality              : ['$1'].
 AList -> Equality     AList    : ['$1'|'$2'].
 AList -> Equality ','          : ['$1'].
 AList -> Equality ',' AList    : ['$1'|'$3'].
@@ -65,11 +65,11 @@ EdgeOp -> '->'    : '$1'.
 NodeStmt -> NodeId             : {node,loc('$1'),'$1',[]}.
 NodeStmt -> NodeId AttrList    : {node,loc('$1'),'$1','$2'}.
 
-NodeId -> id                  : {nodeid,loc('$1'),id('$1'),     <<>>,     <<>>}.
+NodeId -> id                  : {nodeid,loc('$1'),id('$1'),    <<>>,     <<>>}.
 NodeId -> id ':' id           : {nodeid,loc('$1'),id('$1'),id('$3'),     <<>>}.
 NodeId -> id ':' id ':' id    : {nodeid,loc('$1'),id('$1'),id('$3'),id('$5')}.
 
-Subgraph ->               '{' StmtList '}'    : {'subgraph',loc('$1'),     <<>>,'$2'}.
+Subgraph ->               '{' StmtList '}'    : {'subgraph',loc('$1'),    <<>>,'$2'}.
 Subgraph ->            id '{' StmtList '}'    : {'subgraph',loc('$2'),id('$1'),'$3'}.
 Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',loc('$3'),id('$2'),'$4'}.
 
