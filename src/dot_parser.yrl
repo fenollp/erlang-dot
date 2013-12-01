@@ -16,10 +16,10 @@ id
 
 Rootsymbol Graph.
 
-Graph ->          GraphTy    '{' StmtList '}'   : {element(1,'$1'),loc('$1'),false,    <<>>,lists:append('$3')}.
-Graph -> 'strict' GraphTy    '{' StmtList '}'   : {element(1,'$2'),loc('$2'),true,     <<>>,lists:append('$4')}.
-Graph ->          GraphTy id '{' StmtList '}'   : {element(1,'$1'),loc('$1'),false,id('$2'),lists:append('$4')}.
-Graph -> 'strict' GraphTy id '{' StmtList '}'   : {element(1,'$2'),loc('$2'),true, id('$3'),lists:append('$5')}.
+Graph ->          GraphTy    '{' StmtList '}'   : {element(1,'$1'),false,    <<>>,flat('$3')}.
+Graph -> 'strict' GraphTy    '{' StmtList '}'   : {element(1,'$2'),true,     <<>>,flat('$4')}.
+Graph ->          GraphTy id '{' StmtList '}'   : {element(1,'$1'),false,id('$2'),flat('$4')}.
+Graph -> 'strict' GraphTy id '{' StmtList '}'   : {element(1,'$2'),true, id('$3'),flat('$5')}.
 GraphTy -> 'graph'      : '$1'.
 GraphTy -> 'digraph'    : '$1'.
 
@@ -34,11 +34,11 @@ Stmt -> AttrStmt    : '$1'.
 Stmt -> Equality    : '$1'.
 Stmt -> Subgraph    : '$1'.
 
-Equality -> id '=' id    : {'=',loc('$2'),id('$1'),id('$3')}.
+Equality -> id '=' id    : {'=',id('$1'),id('$3')}.
 
-AttrStmt -> 'graph' AttrList    : {'$1',loc('$1'),'$2'}.
-AttrStmt -> 'node'  AttrList    : {'$1',loc('$1'),'$2'}.
-AttrStmt -> 'edge'  AttrList    : {'$1',loc('$1'),'$2'}.
+AttrStmt -> 'graph' AttrList    : {'$1','$2'}.
+AttrStmt -> 'node'  AttrList    : {'$1','$2'}.
+AttrStmt -> 'edge'  AttrList    : {'$1','$2'}.
 
 AttrList -> '['       ']'             : [].
 AttrList -> '[' AList ']'             : ['$2'].
@@ -50,28 +50,28 @@ AList -> Equality     AList    : ['$1'|'$2'].
 AList -> Equality ','          : ['$1'].
 AList -> Equality ',' AList    : ['$1'|'$3'].
 
-EdgeStmt -> NodeId   EdgeRHS             : rw_edge({edge,loc('$2'),'$1','$2',[]}).
-EdgeStmt -> NodeId   EdgeRHS AttrList    : rw_edge({edge,loc('$2'),'$1','$2','$3'}).
-EdgeStmt -> Subgraph EdgeRHS             : {edge,loc('$2'),'$1','$2',[]}.
-EdgeStmt -> Subgraph EdgeRHS AttrList    : {edge,loc('$2'),'$1','$2','$3'}.
+EdgeStmt -> NodeId   EdgeRHS             : rw_edge({edge,'$1','$2',[]}).
+EdgeStmt -> NodeId   EdgeRHS AttrList    : rw_edge({edge,'$1','$2','$3'}).
+EdgeStmt -> Subgraph EdgeRHS             :         {edge,'$1','$2',[]}.
+EdgeStmt -> Subgraph EdgeRHS AttrList    :         {edge,'$1','$2','$3'}.
 
-EdgeRHS -> EdgeOp NodeId              : {element(1,'$1'),loc('$1'),'$2',[]}.
-EdgeRHS -> EdgeOp NodeId EdgeRHS      : {element(1,'$1'),loc('$1'),'$2','$3'}.
-EdgeRHS -> EdgeOp Subgraph            : {element(1,'$1'),loc('$1'),'$2',[]}.
-EdgeRHS -> EdgeOp Subgraph EdgeRHS    : {element(1,'$1'),loc('$1'),'$2','$3'}.
+EdgeRHS -> EdgeOp NodeId              : {element(1,'$1'),'$2',[]}.
+EdgeRHS -> EdgeOp NodeId EdgeRHS      : {element(1,'$1'),'$2','$3'}.
+EdgeRHS -> EdgeOp Subgraph            : {element(1,'$1'),'$2',[]}.
+EdgeRHS -> EdgeOp Subgraph EdgeRHS    : {element(1,'$1'),'$2','$3'}.
 EdgeOp -> '--'    : '$1'.
 EdgeOp -> '->'    : '$1'.
 
-NodeStmt -> NodeId             : {node,loc('$1'),'$1',[]}.
-NodeStmt -> NodeId AttrList    : {node,loc('$1'),'$1','$2'}.
+NodeStmt -> NodeId             : {node,'$1',[]}.
+NodeStmt -> NodeId AttrList    : {node,'$1','$2'}.
 
-NodeId -> id                  : {nodeid,loc('$1'),id('$1'),    <<>>,     <<>>}.
-NodeId -> id ':' id           : {nodeid,loc('$1'),id('$1'),id('$3'),     <<>>}.
-NodeId -> id ':' id ':' id    : {nodeid,loc('$1'),id('$1'),id('$3'),id('$5')}.
+NodeId -> id                  : {nodeid,id('$1'),    <<>>,    <<>>}.
+NodeId -> id ':' id           : {nodeid,id('$1'),id('$3'),    <<>>}.
+NodeId -> id ':' id ':' id    : {nodeid,id('$1'),id('$3'),id('$5')}.
 
-Subgraph ->               '{' StmtList '}'    : {'subgraph',loc('$1'),    <<>>,'$2'}.
-Subgraph ->            id '{' StmtList '}'    : {'subgraph',loc('$2'),id('$1'),'$3'}.
-Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',loc('$3'),id('$2'),'$4'}.
+Subgraph ->               '{' StmtList '}'    : {'subgraph',    <<>>,'$2'}.
+Subgraph ->            id '{' StmtList '}'    : {'subgraph',id('$1'),'$3'}.
+Subgraph -> 'subgraph' id '{' StmtList '}'    : {'subgraph',id('$2'),'$4'}.
 
 %% Number of shift/reduce conflicts
 Expect 2.
@@ -81,15 +81,13 @@ Erlang code.
 id (Id) ->
     element(3, Id).
 
-loc (T) when is_tuple(T) ->
-    element(2, T);
-loc (R) ->
-    R.
+flat (L) ->
+    lists:append(L).
 
 rw_edge (Edge) ->
     case Edge of
-        {edge,Loc,NodeA,{EdgeOp,Loc2,NodeB,Rest},Opts} ->
-            [{EdgeOp,Loc,NodeA,NodeB,Opts} | rw_edge({edge,Loc2,NodeB,Rest,Opts})];
+        {edge,NodeA,{EdgeOp,NodeB,Rest},Opts} ->
+            [{EdgeOp,NodeA,NodeB,Opts} | rw_edge({edge,NodeB,Rest,Opts})];
         _ -> []
     end.
 

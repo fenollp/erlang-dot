@@ -83,7 +83,7 @@ scan (Str) ->
 parse (Tokens) ->
     dot_parser:parse(Tokens).
 
-tostring ({GraphTy,_,Direct,Name,Edges}) ->
+tostring ({GraphTy,Direct,Name,Edges}) ->
     [ case GraphTy of
           'digraph' -> "digraph ";
           'graph'   -> "graph "
@@ -93,10 +93,10 @@ tostring ({GraphTy,_,Direct,Name,Edges}) ->
     ,[case Op of
           '--' -> [$\t, A, " -- ", B, assocs(Opts), ";\n"];
           '->' -> [$\t, A, " -> ", B, assocs(Opts), ";\n"]
-      end || {Op,_,{nodeid,_,A,_,_},{nodeid,_,B,_,_},Opts} <- Edges]
+      end || {Op,{nodeid,A,_,_},{nodeid,B,_,_},Opts} <- Edges]
     , "}\n"
     ];
-tostring ({'=',_,Lhs,Rhs}) ->
+tostring ({'=',Lhs,Rhs}) ->
     [Lhs, "=", Rhs];
 tostring (A) when is_list(A) ->
     [tostring(X) || X <- A].

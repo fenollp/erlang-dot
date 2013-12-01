@@ -11,19 +11,19 @@
 %% API tests.
 
 parse_wikipedia_digraph_test () ->
-    ?assertMatch({ok,{digraph,_,false,<<"graphname">>,
-             [{'->',_,
-                    {nodeid,_,<<"a">>,<<>>,<<>>},
-                    {nodeid,_,<<"b">>,<<>>,<<>>},
-                    [[{'=',_,<<"c">>,<<"l">>}]]},
-              {'->',_,
-                    {nodeid,_,<<"b">>,<<>>,<<>>},
-                    {nodeid,_,<<"c">>,<<>>,<<>>},
-                    [[{'=',_,<<"c">>,<<"l">>}]]},
-              {'->',_,
-                    {nodeid,_,<<"b">>,<<>>,<<>>},
-                    {nodeid,_,<<"d">>,<<>>,<<>>},
-                    [[{'=',_,<<"color">>,<<"blue">>}]]}]}},
+    ?assertEqual({ok,{digraph,false,<<"graphname">>,
+             [{'->',
+                    {nodeid,<<"a">>,<<>>,<<>>},
+                    {nodeid,<<"b">>,<<>>,<<>>},
+                    [[{'=',<<"c">>,<<"l">>}]]},
+              {'->',
+                    {nodeid,<<"b">>,<<>>,<<>>},
+                    {nodeid,<<"c">>,<<>>,<<>>},
+                    [[{'=',<<"c">>,<<"l">>}]]},
+              {'->',
+                    {nodeid,<<"b">>,<<>>,<<>>},
+                    {nodeid,<<"d">>,<<>>,<<>>},
+                    [[{'=',<<"color">>,<<"blue">>}]]}]}},
                  dot:from_string("
 digraph graphname {
      a -> b -> c [c=l];
@@ -37,7 +37,7 @@ reparse_wikipedia_digraph_test () ->
     } "),
     {ok, Str} = dot:to_string(AST),
     Got = lists:flatten(io_lib:format("~s", [Str])),
-    ?assertMatch(Got,
+    ?assertEqual(Got,
         "digraph graphname {\n"
         "\ta -> b [c=l];\n"
         "\tb -> c [c=l];\n"

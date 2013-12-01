@@ -16,10 +16,10 @@
 
 -spec load (dot()) -> out(digraph()).
 load (AST) ->
-    {digraph,_,_Direct,_Name,Assocs} = AST,
+    {digraph,_Direct,_Name,Assocs} = AST,
     G = digraph:new([]),
     lists:foreach(
-      fun ({'->',_,{nodeid,_,A,_,_},{nodeid,_,B,_,_},_}) ->
+      fun ({'->',{nodeid,A,_,_},{nodeid,B,_,_},_}) ->
               A = digraph:add_vertex(G, A),
               B = digraph:add_vertex(G, B),
               ['$e'|_] = digraph:add_edge(G, A, B)
@@ -29,12 +29,12 @@ load (AST) ->
 -spec export (digraph()) -> out(dot()).
 export (G) ->
     {ok,
-     {digraph,1,false,<<>>,
+     {digraph,false,<<>>,
       [ begin
             {E, A, B, _Label} = digraph:edge(G, E),
-            {'->',1
-            ,{nodeid,1,A,<<>>,<<>>}
-            ,{nodeid,1,B,<<>>,<<>>},[]}
+            {'->'
+            ,{nodeid,A,<<>>,<<>>}
+            ,{nodeid,B,<<>>,<<>>},[]}
         end || E <- lists:sort(digraph:edges(G)) ]}}.
 
 %% Internals
