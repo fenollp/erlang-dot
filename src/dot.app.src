@@ -1,6 +1,5 @@
 {application, dot
-, [
-  , {description, "An Erlang DOT (graph description language) library"}
+, [ {description, "An Erlang DOT (graph description language) library"}
   , {vsn, "0.1"}
   , {modules, [ dot
               , dot_lexer
