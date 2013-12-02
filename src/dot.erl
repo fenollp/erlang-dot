@@ -75,7 +75,7 @@ assemble_lines (Dev, Acc) ->
             assemble_lines(Dev, [Line|Acc]);
         eof ->
             ok = file:close(Dev),
-            lists:reverse(Acc)
+            lists:append(lists:reverse(Acc))
     end.
 
 scan (Str) ->
