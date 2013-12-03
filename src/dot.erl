@@ -89,7 +89,7 @@ tostring ({GraphTy,Direct,Name,Edges}) ->
           'graph'   -> "graph "
       end
     , case Direct of true -> "direct "; false -> "" end
-    , Name, " {\n"
+    , case Name of <<>> -> ""; _ -> [Name,$ ] end, "{\n"
     ,[case Op of
           '--' -> [$\t, A, " -- ", B, assocs(Opts), ";\n"];
           '->' -> [$\t, A, " -> ", B, assocs(Opts), ";\n"]
