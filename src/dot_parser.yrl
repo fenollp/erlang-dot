@@ -3,7 +3,8 @@
 %% -*- coding: utf-8 -*-
 
 Nonterminals
-Graph GraphTy StmtList Stmt NodeStmt EdgeStmt AttrStmt Equality Subgraph
+Graph GraphTy Strict
+StmtList Stmt NodeStmt EdgeStmt AttrStmt Equality Subgraph
 AttrList AList NodeId EdgeRHS EdgeOp
 .
 
@@ -16,12 +17,12 @@ id
 
 Rootsymbol Graph.
 
-Graph ->          GraphTy    '{' StmtList '}'   : {element(1,'$1'),false,    <<>>,flat('$3')}.
-Graph -> 'strict' GraphTy    '{' StmtList '}'   : {element(1,'$2'),true,     <<>>,flat('$4')}.
-Graph ->          GraphTy id '{' StmtList '}'   : {element(1,'$1'),false,id('$2'),flat('$4')}.
-Graph -> 'strict' GraphTy id '{' StmtList '}'   : {element(1,'$2'),true, id('$3'),flat('$5')}.
-GraphTy -> 'graph'      : '$1'.
-GraphTy -> 'digraph'    : '$1'.
+Graph -> Strict GraphTy    '{' StmtList '}'    : {'$2','$1',     <<>>,lists:append('$4')}.
+Graph -> Strict GraphTy id '{' StmtList '}'    : {'$2','$1', id('$3'),lists:append('$5')}.
+GraphTy -> 'graph'      : element(1,'$1').
+GraphTy -> 'digraph'    : element(1,'$1').
+Strict -> '$empty'    : false.
+Strict -> 'strict'    : true.
 
 StmtList -> Stmt                 : ['$1'].
 StmtList -> Stmt     StmtList    : ['$1'|'$2'].
@@ -55,12 +56,12 @@ EdgeStmt -> NodeId   EdgeRHS AttrList    : rw_edge({edge,'$1','$2','$3'}).
 EdgeStmt -> Subgraph EdgeRHS             :         {edge,'$1','$2',[]}.
 EdgeStmt -> Subgraph EdgeRHS AttrList    :         {edge,'$1','$2','$3'}.
 
-EdgeRHS -> EdgeOp NodeId              : {element(1,'$1'),'$2',[]}.
-EdgeRHS -> EdgeOp NodeId EdgeRHS      : {element(1,'$1'),'$2','$3'}.
-EdgeRHS -> EdgeOp Subgraph            : {element(1,'$1'),'$2',[]}.
-EdgeRHS -> EdgeOp Subgraph EdgeRHS    : {element(1,'$1'),'$2','$3'}.
-EdgeOp -> '--'    : '$1'.
-EdgeOp -> '->'    : '$1'.
+EdgeRHS -> EdgeOp NodeId              : {'$1','$2',[]}.
+EdgeRHS -> EdgeOp NodeId EdgeRHS      : {'$1','$2','$3'}.
+EdgeRHS -> EdgeOp Subgraph            : {'$1','$2',[]}.
+EdgeRHS -> EdgeOp Subgraph EdgeRHS    : {'$1','$2','$3'}.
+EdgeOp -> '--'    : element(1,'$1').
+EdgeOp -> '->'    : element(1,'$1').
 
 NodeStmt -> NodeId             : {node,'$1',[]}.
 NodeStmt -> NodeId AttrList    : {node,'$1','$2'}.
@@ -80,9 +81,6 @@ Erlang code.
 
 id (Id) ->
     element(3, Id).
-
-flat (L) ->
-    lists:append(L).
 
 rw_edge (Edge) ->
     case Edge of
