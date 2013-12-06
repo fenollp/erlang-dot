@@ -96,14 +96,14 @@ tostring ({dot,GraphTy,Direct,Name,Things}) ->
     , "}\n"
     ];
 tostring ({node,{nodeid,N,_,_},Opts}) ->
-    [N, $ , assocs(Opts), " ;\n"];
+    [$\t, N, assocs(Opts), " ;\n"];
 tostring ({Op,{nodeid,A,_,_},{nodeid,B,_,_},Opts}) ->
     case Op of
         '--' -> [$\t, A, " -- ", B, assocs(Opts), ";\n"];
         '->' -> [$\t, A, " -> ", B, assocs(Opts), ";\n"]
     end;
 tostring ({'=',Lhs,Rhs}) ->
-    [Lhs, "=", Rhs];
+    [Lhs, "=\"", Rhs, $\"];
 tostring (A) when is_list(A) ->
     [tostring(X) || X <- A].
 
