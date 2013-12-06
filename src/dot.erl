@@ -85,7 +85,7 @@ scan (Str) ->
 parse (Tokens) ->
     dot_parser:parse(Tokens).
 
-tostring ({GraphTy,Direct,Name,Things}) ->
+tostring ({dot,GraphTy,Direct,Name,Things}) ->
     [ case GraphTy of
           'digraph' -> "digraph ";
           'graph'   -> "graph "

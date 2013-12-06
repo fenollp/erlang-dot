@@ -11,7 +11,7 @@
 %% API tests.
 
 parse_wikipedia_digraph_test () ->
-    ?assertEqual({ok,{digraph,false,<<"graphname">>,
+    ?assertEqual({ok,{dot,digraph,false,<<"graphname">>,
              [{'->',
                     {nodeid,<<"a">>,<<>>,<<>>},
                     {nodeid,<<"b">>,<<>>,<<>>},

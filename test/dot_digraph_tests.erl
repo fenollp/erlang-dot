@@ -13,7 +13,7 @@
 load_export_test () ->
     {ok,A} = dot:from_string("digraph { a -> b -> c; b -> d; }"),
     {ok,G} = dot_digraph:load(A),
-    {ok,{digraph,false,<<>>,Raw}} = dot_digraph:export(G),
+    {ok,{dot,digraph,false,<<>>,Raw}} = dot_digraph:export(G),
     ?assertEqual([
                   {'->',
                    {nodeid,<<"a">>,<<>>,<<>>},

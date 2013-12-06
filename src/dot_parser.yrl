@@ -17,8 +17,8 @@ id
 
 Rootsymbol Graph.
 
-Graph -> Strict GraphTy    '{' StmtList '}'    : {'$2','$1',     <<>>,lists:flatten('$4')}.
-Graph -> Strict GraphTy id '{' StmtList '}'    : {'$2','$1', id('$3'),lists:flatten('$5')}.
+Graph -> Strict GraphTy    '{' StmtList '}'    : {dot,'$2','$1',     <<>>,lists:flatten('$4')}.
+Graph -> Strict GraphTy id '{' StmtList '}'    : {dot,'$2','$1', id('$3'),lists:flatten('$5')}.
 GraphTy -> 'graph'      : element(1,'$1').
 GraphTy -> 'digraph'    : element(1,'$1').
 Strict -> '$empty'    : false.

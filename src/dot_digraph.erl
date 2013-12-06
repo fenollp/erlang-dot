@@ -16,7 +16,7 @@
 
 -spec load (dot()) -> out(digraph()).
 load (AST) ->
-    {digraph,_Direct,_Name,Assocs} = AST,
+    {dot,digraph,_Direct,_Name,Assocs} = AST,
     G = digraph:new([]),
     lists:foreach(
       fun
@@ -36,25 +36,26 @@ load (AST) ->
 -spec export (digraph()) -> out(dot()).
 export (G) ->
     {ok,
-     {digraph,false,<<>>,
-      lists:filtermap(fun (V) ->
-                              case digraph:vertex(G, V) of
-                                  {V, []} ->
-                                      false;
-                                  {V, Label} ->
-                                      {true, {node,{nodeid,V,<<>>,<<>>},
-                                              [{'=',
-                                                case Key of
-                                                    K when is_atom(K) ->
-                                                        atom_to_list(K);
-                                                    _ ->
-                                                        Key
-                                                end,
-                                                Value} || {Key,Value} <- Label]
-                                             }
-                                      }
-                              end
-                      end, digraph:vertices(G))
+     {dot,digraph,false,<<>>,
+      lists:filtermap(
+        fun (V) ->
+                case digraph:vertex(G, V) of
+                    {V, []} ->
+                        false;
+                    {V, Label} ->
+                        {true, {node,{nodeid,V,<<>>,<<>>},
+                                [{'=',
+                                  case Key of
+                                      K when is_atom(K) ->
+                                          atom_to_list(K);
+                                      _ ->
+                                          Key
+                                  end,
+                                  Value} || {Key,Value} <- Label]
+                               }
+                        }
+                end
+        end, digraph:vertices(G))
       ++
       [ begin
             {E, A, B, _Label} = digraph:edge(G, E),
