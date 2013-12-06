@@ -26,6 +26,8 @@ from_string (String) ->
             case parse(Tokens) of
                 {ok, AST} ->
                     {ok, AST};
+                {error, Reason} ->
+                    {error, Reason};
                 Reason ->
                     {error, Reason}
             end;
