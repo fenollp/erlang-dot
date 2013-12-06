@@ -42,7 +42,7 @@ AttrStmt -> 'node'  AttrList    : {'$1','$2'}.
 AttrStmt -> 'edge'  AttrList    : {'$1','$2'}.
 
 AttrList -> '['       ']'             : [].
-AttrList -> '[' AList ']'             : ['$2'].
+AttrList -> '[' AList ']'             : '$2'.
 AttrList -> '['       ']' AttrList    : '$3'.
 AttrList -> '[' AList ']' AttrList    : ['$2'|'$4'].
 
