@@ -2,12 +2,12 @@
 %% See LICENSE for licensing information.
 %% -*- coding: utf-8 -*-
 
--type dot() :: #dot().
-
 -record(dot, { type :: 'graph' | 'digraph'
              , strict :: boolean()
              , name :: binary() | string()
              , parts :: term()
              }).
+
+-type dot() :: #dot{}.
 
 %% End of Header.
