@@ -24,6 +24,10 @@ load (AST) ->
               Label = [{Key,Value} || {'=',Key,Value} <- Opts],
               digraph:add_vertex(G, N, Label);
           ({'->',{nodeid,A,_,_},{nodeid,B,_,_},_}) ->
+              [ case digraph:vertex(G, N) of
+                    false -> digraph:add_vertex(G, N, []);
+                    {N, _} -> do_nothing
+                end || N <- [A,B] ],
               ['$e'|_] = digraph:add_edge(G, A, B)
       end,
       lists:sort(fun erlang:'<'/2, Assocs)),
@@ -33,17 +37,24 @@ load (AST) ->
 export (G) ->
     {ok,
      {digraph,false,<<>>,
-      [ begin
-            {V, Label} = digraph:vertex(G, V),
-            {node,{nodeid,V,<<>>,<<>>},
-             [{'=', case Key of
-                        K when is_atom(K) ->
-                            atom_to_list(K);
-                        _ ->
-                            Key
-                    end, Value} || {Key,Value} <- Label]
-            }
-        end || V <- digraph:vertices(G) ]
+      lists:filtermap(fun (V) ->
+                              case digraph:vertex(G, V) of
+                                  {V, []} ->
+                                      false;
+                                  {V, Label} ->
+                                      {true, {node,{nodeid,V,<<>>,<<>>},
+                                              [{'=',
+                                                case Key of
+                                                    K when is_atom(K) ->
+                                                        atom_to_list(K);
+                                                    _ ->
+                                                        Key
+                                                end,
+                                                Value} || {Key,Value} <- Label]
+                                             }
+                                      }
+                              end
+                      end, digraph:vertices(G))
       ++
       [ begin
             {E, A, B, _Label} = digraph:edge(G, E),
