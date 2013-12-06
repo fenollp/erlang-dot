@@ -55,7 +55,7 @@ to_file (Filename, AST) ->
 
 -spec load_graph (dot()) -> out(term()).
 load_graph (AST) ->
-    case element(1,AST) of
+    case element(2,AST) of
         digraph ->
             dot_digraph:load(AST)
     end.
