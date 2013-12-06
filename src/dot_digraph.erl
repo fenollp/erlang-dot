@@ -19,11 +19,14 @@ load (AST) ->
     {digraph,_Direct,_Name,Assocs} = AST,
     G = digraph:new([]),
     lists:foreach(
-      fun ({'->',{nodeid,A,_,_},{nodeid,B,_,_},_}) ->
-              A = digraph:add_vertex(G, A),
-              B = digraph:add_vertex(G, B),
+      fun
+          ({node,{nodeid,N,_,_},Opts}) ->
+              Label = [{Key,Value} || {'=',Key,Value} <- Opts],
+              digraph:add_vertex(G, N, Label);
+          ({'->',{nodeid,A,_,_},{nodeid,B,_,_},_}) ->
               ['$e'|_] = digraph:add_edge(G, A, B)
-      end, Assocs),
+      end,
+      lists:sort(fun erlang:'<'/2, Assocs)),
     {ok, G}.
 
 -spec export (digraph()) -> out(dot()).
@@ -31,11 +34,23 @@ export (G) ->
     {ok,
      {digraph,false,<<>>,
       [ begin
+            {V, Label} = digraph:vertex(G, V),
+            {node,{nodeid,V,<<>>,<<>>},
+             [{'=', case Key of
+                        K when is_atom(K) ->
+                            atom_to_list(K);
+                        _ ->
+                            Key
+                    end, Value} || {Key,Value} <- Label]
+            }
+        end || V <- digraph:vertices(G) ]
+      ++
+      [ begin
             {E, A, B, _Label} = digraph:edge(G, E),
             {'->'
             ,{nodeid,A,<<>>,<<>>}
             ,{nodeid,B,<<>>,<<>>},[]}
-        end || E <- lists:sort(digraph:edges(G)) ]}}.
+        end || E <- digraph:edges(G) ]}}.
 
 %% Internals
 
