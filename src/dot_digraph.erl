@@ -5,8 +5,8 @@
 
 %% dot_digraph: DOT <-> Erlang directed graph.
 
--export([load/1]).
--export([export/1]).
+-export([   load/1
+        , export/1 ]).
 
 -include("include/dot.hrl").
 

@@ -4,13 +4,14 @@
 
 %% dot: erlang-dot library's entry point.
 
--export([from_string/1]).
--export([  to_string/1]).
--export([from_file/1]).
--export([  to_file/2]).
+-export([  from_string/1
+        ,    to_string/1
 
--export([  load_graph/1]).
--export([export_graph/1]).
+        ,    from_file/1
+        ,      to_file/2
+
+        ,   load_graph/1
+        , export_graph/1 ]).
 
 -include("include/dot.hrl").
 
