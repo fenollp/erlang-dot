@@ -1,7 +1,7 @@
 #erlang-dot • [GitHub](//github.com/fenollp/erlang-dot)
 
 ## Basis
-* [DOT (graph description language)](http://en.wikipedia.org/wiki/DOT_(graph_description_language)#Syntax)
+* [DOT (graph description language)](http://en.wikipedia.org/wiki/DOT_%28graph_description_language%29#Syntax)
 * [The DOT grammar](http://www.graphviz.org/doc/info/lang.html)
 
 ### Overview
