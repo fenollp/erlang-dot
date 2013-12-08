@@ -31,18 +31,15 @@ digraph graphname {
  } ")).
 
 reparse_wikipedia_digraph_test () ->
-    {ok, AST} = dot:from_string("digraph graphname {
-        a -> b -> c [c=l];
-        b -> d [color=blue];
-    } "),
-    {ok, Str} = dot:to_string(AST),
-    Got = lists:flatten(io_lib:format("~s", [Str])),
-    ?assertEqual(Got,
-        "digraph graphname {\n"
+    Digraph = "digraph graphname {\n"
         "\ta -> b [c=l];\n"
         "\tb -> c [c=l];\n"
         "\tb -> d [color=blue];\n"
-        "}\n").
+        "}\n",
+    {ok, AST} = dot:from_string(Digraph),
+    {ok, Str} = dot:to_string(AST),
+    Got = lists:flatten(io_lib:format("~s", [Str])),
+    ?assertEqual(Got, Digraph).
 
 %% Internals
 
