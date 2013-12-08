@@ -1,7 +1,7 @@
 all: erl.mk
 
 erl.mk:
-	wget 'https://raw.github.com/fenollp/erl-mk/master/erl.mk'
+	wget -nv -O $@ 'https://raw.github.com/fenollp/erl-mk/master/erl.mk' || rm ./$@
 
 DEPS =
 
@@ -14,7 +14,7 @@ distclean: clean clean-docs
 
 include erl.mk
 
-# You need ANTLRv4 in your $CLASSPATH
+# Your targets after this line.
 
 debug: all
 	erl -pa ebin/ -pa deps/*/ebin/
