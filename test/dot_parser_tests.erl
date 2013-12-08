@@ -32,14 +32,14 @@ digraph graphname {
 
 reparse_wikipedia_digraph_test () ->
     Digraph = "digraph graphname {\n"
-        "\ta -> b [c=l];\n"
-        "\tb -> c [c=l];\n"
-        "\tb -> d [color=blue];\n"
+        "\ta -> b [c=\"l\"];\n"
+        "\tb -> c [c=\"l\"];\n"
+        "\tb -> d [color=\"blue\"];\n"
         "}\n",
     {ok, AST} = dot:from_string(Digraph),
     {ok, Str} = dot:to_string(AST),
     Got = lists:flatten(io_lib:format("~s", [Str])),
-    ?assertEqual(Got, Digraph).
+    ?assertEqual(Digraph, Got).
 
 %% Internals
 
