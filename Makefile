@@ -14,6 +14,6 @@ distclean: clean clean-docs
 .PHONY: distclean
 
 debug: all
-	erl -pa ebin/ -pa deps/*/ebin/
+	erl -pa ebin/ -pa deps/*/ebin/ -eval 'c:l($(APP)).'
 
-test: all eunit
+test: eunit
