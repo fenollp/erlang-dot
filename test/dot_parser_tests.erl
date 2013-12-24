@@ -30,10 +30,10 @@ digraph graphname {
      b -> d [color=blue];
  } ")).
 
-reparse_wikipedia_digraph_test () ->
+print_wikipedia_digraph_test () ->
     Digraph = "digraph graphname {\n"
         "\ta -> b [c=\"l\"];\n"
-        "\tb -> c [c=\"l\"];\n"
+        "\tb -> c [c=\"l m\"];\n"
         "\tb -> d [color=\"blue\"];\n"
         "}\n",
     {ok, AST} = dot:from_string(Digraph),

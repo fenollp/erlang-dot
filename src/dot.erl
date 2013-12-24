@@ -104,7 +104,14 @@ tostring ({Op,{nodeid,A,_,_},{nodeid,B,_,_},Opts}) ->
         '->' -> [$\t, A, " -> ", B, assocs(Opts), ";\n"]
     end;
 tostring ({'=',Lhs,Rhs}) ->
-    [Lhs, "=\"", Rhs, $\"];
+    case Rhs of
+        <<$", _/binary>> ->
+            [Lhs, "=", Rhs];
+        [$"] ++ _ ->
+            [Lhs, "=", Rhs];
+        _ ->
+            [Lhs, "=\"", Rhs, $\"]
+    end;
 tostring (A) when is_list(A) ->
     [tostring(X) || X <- A].
 
